@@ -1,5 +1,10 @@
 import { Component } from 'react';
 
+import PokemonErrorView from './PokemonErrorView';
+import PokemonDataView from './PokemonDataView';
+import PokemonPendingView from './PokemonPendingView';
+import fetchPokemon from './fetchPokemon';
+
 import {
   STATUS_IDLE,
   STATUS_PENDING,
@@ -14,21 +19,14 @@ class PokemonInfo extends Component {
     const prevName = prevProps.pokemonName;
     const nextName = this.props.pokemonName;
 
-    if (prevName !== nextName) {
+    if (prevName !== nextName && nextName !== '') {
       this.setState({ status: STATUS_PENDING });
 
-      fetch(`https://pokeapi.co/api/v2/pokemon/${this.props.pokemonName}`)
-        .then(response => {
-          if (response.ok) {
-            return response.json();
-          }
-
-          return Promise.reject(
-            new Error(`No ${this.props.pokemonName} pokemon here`)
-          );
-        })
-        .then(pokemon => this.setState({ pokemon, status: STATUS_RESOLVED }))
-        .catch(error => this.setState({ error, status: STATUS_REJECTED }));
+      setTimeout(() => {
+        fetchPokemon(this.props.pokemonName)
+          .then(pokemon => this.setState({ pokemon, status: STATUS_RESOLVED }))
+          .catch(error => this.setState({ error, status: STATUS_REJECTED }));
+      }, 1000);
     }
   }
 
@@ -41,24 +39,15 @@ class PokemonInfo extends Component {
     }
 
     if (status === STATUS_PENDING) {
-      return <div>Loading...</div>;
+      return <PokemonPendingView pokemonName={pokemonName} />;
     }
 
     if (status === STATUS_REJECTED) {
-      return <div>{error.message}</div>;
+      return <PokemonErrorView message={error.message} />;
     }
 
     if (status === STATUS_RESOLVED) {
-      return (
-        <div>
-          <p>{pokemon.name}</p>
-          <img
-            src={pokemon.sprites.other['official-artwork'].front_default}
-            alt=""
-            width="240"
-          />
-        </div>
-      );
+      return <PokemonDataView pokemon={pokemon} />;
     }
   }
 }
