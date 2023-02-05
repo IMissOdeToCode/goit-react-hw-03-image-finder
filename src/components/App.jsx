@@ -3,23 +3,30 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 // import PokeApi from './PokeApi/PokeApi';
-import PokemonForm from './PokeApi/PokemonForm';
-import PokemonInfo from './PokeApi/PokemonInfo';
+// import PokemonForm from './PokeApi/PokemonForm';
+// import PokemonInfo from './PokeApi/PokemonInfo';
+
+import Searchbar from './ImageFinder/Searchbar';
+import ImageGallery from './ImageFinder/ImageGallery';
 
 class App extends Component {
-  state = { pokemonName: '' };
+  state = { query: '' };
 
-  handleFormSubmit = pokemonName => {
-    this.setState({ pokemonName });
+  handleFormSubmit = query => {
+    this.setState({ query });
   };
 
   render() {
-    const { pokemonName } = this.state;
+    const { query } = this.state;
 
     return (
       <>
-        <PokemonForm onSubmit={this.handleFormSubmit} />
-        <PokemonInfo pokemonName={pokemonName} />
+        {/* <PokemonForm onSubmit={this.handleFormSubmit} /> */}
+        {/* <PokemonInfo pokemonName={pokemonName} /> */}
+
+        <Searchbar onSubmit={this.handleFormSubmit} />
+        <ImageGallery query={query} />
+
         <ToastContainer />
       </>
     );
