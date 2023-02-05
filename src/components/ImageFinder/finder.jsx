@@ -5,10 +5,11 @@ const finder = (query, page) => {
 
   return fetch(URL).then(response => {
     if (response.ok) {
-      console.log('OK', response);
+      // console.log('OK', response);
       return response.json();
     }
-    console.log('not OK', response.status);
+    // console.log('not OK', response.status);
+
     return Promise.reject(
       new Error(`status: ${response.status} - Bad Request Error`)
     );
