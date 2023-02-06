@@ -10,61 +10,55 @@ import {
   STATUS_RESOLVED,
   STATUS_EMPTY,
 } from './status';
-// import data from './data';
+// import fileData from './data';
 
 import css from './styles.module.css';
 
 class ImageGallery extends Component {
   //   state = { data: data };
-  state = { data: {}, page: 1, error: null, status: STATUS_IDLE };
+  state = { data: [], page: 1, error: null, status: STATUS_IDLE };
 
   componentDidUpdate(prevProps, prevState) {
     const prevQuery = prevProps.query;
     const nextQuery = this.props.query;
+    const isQueryChanged = prevQuery !== nextQuery && nextQuery !== '';
+    const isPageChanged =
+      prevState.page !== this.state.page && this.state.page > prevState.page;
 
-    if (
-      (prevQuery !== nextQuery && nextQuery !== '') ||
-      prevState.page !== this.state.page
-    ) {
-      this.setState({ status: STATUS_PENDING });
+    console.log('isQueryChanged', isQueryChanged);
 
-      setTimeout(() => {
-        finder(nextQuery, this.state.page)
-          .then(images => {
-            console.log(images.hits);
-            if (!images.total) {
-              return this.setState({
-                status: STATUS_EMPTY,
-                error: new Error(`There is no ${nextQuery} images`),
-              });
-            }
-            this.setState(({ data }) => ({
-              data: { ...data, ...images },
+    if (isQueryChanged || isPageChanged) {
+      console.log('componentDidUpdate');
+
+      if (isQueryChanged) {
+        this.setState({ status: STATUS_PENDING });
+      }
+
+      finder(nextQuery, isQueryChanged ? 1 : this.state.page)
+        .then(images => {
+          // console.log('images:', images);
+
+          if (!images.total) {
+            return this.setState({
+              status: STATUS_EMPTY,
+              error: new Error(`There is no ${nextQuery} images`),
+            });
+          }
+
+          this.setState(
+            ({ data }) => ({
+              ...(isQueryChanged
+                ? { page: 1, data: images.hits }
+                : { data: [...data, ...images.hits] }),
               status: STATUS_RESOLVED,
-
-              // { data: images, status: STATUS_RESOLVED }
-            }));
-          })
-          .catch(error => this.setState({ error, status: STATUS_REJECTED }))
-          .finally(() => {
-            console.log('finnaly');
-          });
-      }, 1000);
-
-      //   finder(nextQuery, 1)
-      //     .then(images => {
-      //       if (!images.total) {
-      //         return this.setState({
-      //           status: STATUS_EMPTY,
-      //           error: new Error(`There is no ${nextQuery} images`),
-      //         });
-      //       }
-      //       this.setState({ data: images, status: STATUS_RESOLVED });
-      //     })
-      //     .catch(error => this.setState({ error, status: STATUS_REJECTED }))
-      //     .finally(() => {
-      //       console.log('finnaly');
-      //     });
+            }),
+            () => isQueryChanged && window.scrollTo(0, 0)
+          );
+        })
+        .catch(error => this.setState({ error, status: STATUS_REJECTED }))
+        .finally(() => {
+          console.log('finnaly');
+        });
     }
   }
 
@@ -75,7 +69,9 @@ class ImageGallery extends Component {
 
   render() {
     const { error, status } = this.state;
-    const images = this.state.data.hits;
+    const images = this.state.data;
+
+    // console.log('images in render', images);
 
     if (status === STATUS_PENDING) {
       return <Loader />;
@@ -86,6 +82,7 @@ class ImageGallery extends Component {
     }
 
     if (status === STATUS_RESOLVED) {
+      // console.log(images);
       const items = images.map(image => {
         return (
           <ImageGalleryItem

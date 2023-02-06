@@ -1,4 +1,4 @@
-const data = {
+const fileData = {
   total: 23357,
   totalHits: 500,
   hits: [
@@ -352,4 +352,4 @@ const data = {
   ],
 };
 
-export default data;
+export default fileData;
