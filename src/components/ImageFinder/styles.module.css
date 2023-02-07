@@ -173,6 +173,9 @@ img {
 }
 
 .Modal {
+  min-width: 200px;
+  min-height: 200px;
+  background-color: #fff;
   max-width: calc(100vw - 48px);
   max-height: calc(100vh - 24px);
 }

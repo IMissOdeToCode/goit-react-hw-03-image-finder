@@ -1,5 +1,7 @@
 import { Component } from 'react';
 import ImageGalleryItem from './ImageGalleryItem';
+import Modal from './Modal';
+import DetailedImage from './DetailedImage';
 import finder from './finder';
 import Loader from './Loader';
 
@@ -15,8 +17,14 @@ import {
 import css from './styles.module.css';
 
 class ImageGallery extends Component {
-  //   state = { data: data };
-  state = { data: [], page: 1, error: null, status: STATUS_IDLE };
+  state = {
+    data: [],
+    page: 1,
+    error: null,
+    status: STATUS_IDLE,
+    showModal: false,
+    detailedImageURL: null,
+  };
 
   componentDidUpdate(prevProps, prevState) {
     const prevQuery = prevProps.query;
@@ -67,8 +75,14 @@ class ImageGallery extends Component {
     console.log('handleNextPage:', this.state.page);
   };
 
+  showPost = largeImageURL => {
+    console.log('show post', largeImageURL);
+    this.setState({ detailedImageURL: largeImageURL, showModal: true });
+  };
+
   render() {
-    const { error, status } = this.state;
+    const { handleNextPage, showPost } = this;
+    const { error, status, detailedImageURL, showModal } = this.state;
     const images = this.state.data;
 
     // console.log('images in render', images);
@@ -86,6 +100,7 @@ class ImageGallery extends Component {
       const items = images.map(image => {
         return (
           <ImageGalleryItem
+            showPost={showPost}
             key={image.id}
             image={image}
           />
@@ -94,7 +109,17 @@ class ImageGallery extends Component {
       return (
         <>
           <ul className={css.ImageGallery}>{items}</ul>
-          <button onClick={this.handleNextPage}>MORE PICTURES</button>
+          <button
+            className={css.Button}
+            onClick={handleNextPage}
+          >
+            MORE PICTURES
+          </button>
+          {showModal && (
+            <Modal>
+              <DetailedImage largeImageURL={detailedImageURL} />
+            </Modal>
+          )}
         </>
       );
     }
