@@ -1,3 +1,5 @@
+import PropTypes from 'prop-types';
+
 import css from './styles.module.css';
 
 const ImageGalleryItem = ({ image, showPost }) => {
@@ -18,3 +20,12 @@ const ImageGalleryItem = ({ image, showPost }) => {
 };
 
 export default ImageGalleryItem;
+
+ImageGalleryItem.propTypes = {
+  image: PropTypes.shape({
+    largeImageURL: PropTypes.string,
+    webformatURL: PropTypes.string,
+    id: PropTypes.number,
+  }),
+  showPost: PropTypes.func.isRequired,
+};

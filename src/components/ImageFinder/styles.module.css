@@ -121,6 +121,11 @@ img {
 /*
  * Стили компонента ImageGallery
  */
+.galleryContainer {
+  display: flex;
+  flex-direction: column;
+}
+
 .ImageGallery {
   display: grid;
   max-width: calc(100vw - 48px);
@@ -128,7 +133,7 @@ img {
   grid-gap: 16px;
   margin-top: 0;
   margin-bottom: 0;
-  padding: 0;
+  padding: 15px;
   list-style: none;
   margin-left: auto;
   margin-right: auto;
@@ -184,6 +189,7 @@ img {
 * Стили компонента Buton (Load more)
 */
 .Button {
+  margin: 0 auto 15px auto;
   padding: 8px 16px;
   border-radius: 2px;
   background-color: #3f51b5;

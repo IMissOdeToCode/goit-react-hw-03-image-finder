@@ -1,3 +1,5 @@
+import PropTypes from 'prop-types';
+
 const finder = (query, page) => {
   const KEY = '31997042-894b50945f52065251b1ba68b';
   // const KEY = '0';
@@ -17,3 +19,8 @@ const finder = (query, page) => {
 };
 
 export default finder;
+
+finder.propTypes = {
+  query: PropTypes.string,
+  page: PropTypes.string,
+};

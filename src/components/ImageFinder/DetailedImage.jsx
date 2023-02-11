@@ -1,4 +1,4 @@
-import css from './styles.module.css';
+import PropTypes from 'prop-types';
 
 const DetailedImage = ({ largeImageURL }) => {
   return (
@@ -10,3 +10,5 @@ const DetailedImage = ({ largeImageURL }) => {
 };
 
 export default DetailedImage;
+
+DetailedImage.propTypes = { largeImageURL: PropTypes.string };

@@ -5,6 +5,8 @@ import DetailedImage from './DetailedImage';
 import finder from './finder';
 import Loader from './Loader';
 
+import PropTypes from 'prop-types';
+
 import {
   STATUS_IDLE,
   STATUS_PENDING,
@@ -12,7 +14,6 @@ import {
   STATUS_RESOLVED,
   STATUS_EMPTY,
 } from './status';
-// import fileData from './data';
 
 import css from './styles.module.css';
 
@@ -24,6 +25,7 @@ class ImageGallery extends Component {
     status: STATUS_IDLE,
     showModal: false,
     detailedImageURL: null,
+    canLoadMore: true,
   };
 
   componentDidUpdate(prevProps, prevState) {
@@ -33,18 +35,16 @@ class ImageGallery extends Component {
     const isPageChanged =
       prevState.page !== this.state.page && this.state.page > prevState.page;
 
-    console.log('isQueryChanged', isQueryChanged);
-
     if (isQueryChanged || isPageChanged) {
-      console.log('componentDidUpdate');
-
       if (isQueryChanged) {
         this.setState({ status: STATUS_PENDING });
       }
 
       finder(nextQuery, isQueryChanged ? 1 : this.state.page)
         .then(images => {
-          // console.log('images:', images);
+          if (images.hits.length < 12) {
+            this.setState({ canLoadMore: false });
+          }
 
           if (!images.total) {
             return this.setState({
@@ -56,7 +56,7 @@ class ImageGallery extends Component {
           this.setState(
             ({ data }) => ({
               ...(isQueryChanged
-                ? { page: 1, data: images.hits }
+                ? { page: 1, data: images.hits, canLoadMore: true }
                 : { data: [...data, ...images.hits] }),
               status: STATUS_RESOLVED,
             }),
@@ -64,28 +64,27 @@ class ImageGallery extends Component {
           );
         })
         .catch(error => this.setState({ error, status: STATUS_REJECTED }))
-        .finally(() => {
-          console.log('finnaly');
-        });
+        .finally(() => {});
     }
   }
 
   handleNextPage = () => {
     this.setState(({ page }) => ({ page: page + 1 }));
-    console.log('handleNextPage:', this.state.page);
   };
 
   showPost = largeImageURL => {
-    console.log('show post', largeImageURL);
     this.setState({ detailedImageURL: largeImageURL, showModal: true });
   };
 
-  render() {
-    const { handleNextPage, showPost } = this;
-    const { error, status, detailedImageURL, showModal } = this.state;
-    const images = this.state.data;
+  closeModal = () => {
+    this.setState({ showModal: false, detailedImageURL: null });
+  };
 
-    // console.log('images in render', images);
+  render() {
+    const { handleNextPage, showPost, closeModal } = this;
+    const { error, status, detailedImageURL, showModal, canLoadMore } =
+      this.state;
+    const images = this.state.data;
 
     if (status === STATUS_PENDING) {
       return <Loader />;
@@ -96,7 +95,6 @@ class ImageGallery extends Component {
     }
 
     if (status === STATUS_RESOLVED) {
-      // console.log(images);
       const items = images.map(image => {
         return (
           <ImageGalleryItem
@@ -108,18 +106,22 @@ class ImageGallery extends Component {
       });
       return (
         <>
-          <ul className={css.ImageGallery}>{items}</ul>
-          <button
-            className={css.Button}
-            onClick={handleNextPage}
-          >
-            MORE PICTURES
-          </button>
-          {showModal && (
-            <Modal>
-              <DetailedImage largeImageURL={detailedImageURL} />
-            </Modal>
-          )}
+          <div className={css.galleryContainer}>
+            <ul className={css.ImageGallery}>{items}</ul>
+            {canLoadMore && (
+              <button
+                className={css.Button}
+                onClick={handleNextPage}
+              >
+                MORE PICTURES
+              </button>
+            )}
+            {showModal && (
+              <Modal close={closeModal}>
+                <DetailedImage largeImageURL={detailedImageURL} />
+              </Modal>
+            )}
+          </div>
         </>
       );
     }
@@ -127,3 +129,7 @@ class ImageGallery extends Component {
 }
 
 export default ImageGallery;
+
+ImageGallery.propTypes = {
+  query: PropTypes.string.isRequired,
+};
