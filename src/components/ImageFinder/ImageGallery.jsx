@@ -25,10 +25,11 @@ class ImageGallery extends Component {
     status: STATUS_IDLE,
     showModal: false,
     detailedImageURL: null,
-    canLoadMore: true,
+    canLoadMore: false,
   };
 
   componentDidUpdate(prevProps, prevState) {
+    const IMAGE_PER_PAGE = 12;
     const prevQuery = prevProps.query;
     const nextQuery = this.props.query;
     const isQueryChanged = prevQuery !== nextQuery && nextQuery !== '';
@@ -42,7 +43,9 @@ class ImageGallery extends Component {
 
       finder(nextQuery, isQueryChanged ? 1 : this.state.page)
         .then(images => {
-          if (images.hits.length < 12) {
+          if (images.hits.length >= IMAGE_PER_PAGE) {
+            this.setState({ canLoadMore: true });
+          } else {
             this.setState({ canLoadMore: false });
           }
 
@@ -56,7 +59,7 @@ class ImageGallery extends Component {
           this.setState(
             ({ data }) => ({
               ...(isQueryChanged
-                ? { page: 1, data: images.hits, canLoadMore: true }
+                ? { page: 1, data: images.hits }
                 : { data: [...data, ...images.hits] }),
               status: STATUS_RESOLVED,
             }),
@@ -64,7 +67,9 @@ class ImageGallery extends Component {
           );
         })
         .catch(error => this.setState({ error, status: STATUS_REJECTED }))
-        .finally(() => {});
+        .finally(() => {
+          console.log('finally');
+        });
     }
   }
 
