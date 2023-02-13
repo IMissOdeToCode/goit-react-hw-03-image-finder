@@ -14,7 +14,7 @@ class Searchbar extends Component {
 
   handleSubmit = event => {
     event.preventDefault();
-
+    // console.log('Searchbar result', this.state.query);
     this.props.onSubmit(this.state.query);
     this.setState({ query: '' });
 

@@ -2,11 +2,11 @@ import PropTypes from 'prop-types';
 
 import css from './styles.module.css';
 
-const ImageGalleryItem = ({ image, showPost }) => {
+const ImageGalleryItem = ({ image, showLargeImage }) => {
   return (
     <li
       onClick={() => {
-        showPost(image.largeImageURL);
+        showLargeImage(image.largeImageURL);
       }}
       className={css.ImageGalleryItem}
     >
@@ -27,5 +27,5 @@ ImageGalleryItem.propTypes = {
     webformatURL: PropTypes.string,
     id: PropTypes.number,
   }),
-  showPost: PropTypes.func.isRequired,
+  showLargeImage: PropTypes.func.isRequired,
 };

@@ -1,14 +1,16 @@
 import { ImSpinner } from 'react-icons/im';
+import css from './styles.module.css';
 
 const Loader = () => {
   return (
     <div role="alert">
-      <div>
+      <div className={css.LoaderBox}>
         <ImSpinner
           className="icon-spin"
-          size="32"
+          size="64"
+          color="3f51b5"
         />
-        ...Loading
+        <p className={css.LoaderText}>...Loading...</p>
       </div>
     </div>
   );

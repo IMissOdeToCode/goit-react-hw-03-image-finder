@@ -16,7 +16,7 @@ class Modal extends Component {
   }
 
   closeModal = ({ target, currentTarget, code }) => {
-    if (target === currentTarget || code === 'Escape') {
+    if (target === currentTarget || code === 'Escape' || code === 'Space') {
       this.props.close();
     }
   };
