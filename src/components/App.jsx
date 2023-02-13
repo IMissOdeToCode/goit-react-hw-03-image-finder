@@ -42,7 +42,7 @@ class App extends Component {
 
     if (isQueryChanged || isPageChanged) {
       if (isQueryChanged) {
-        this.setState({ status: STATUS_PENDING });
+        this.setState({ status: STATUS_PENDING, isLoadMore: false });
       }
 
       searchImages(query, isQueryChanged ? 1 : page)
@@ -54,7 +54,6 @@ class App extends Component {
           }
 
           if (data.hits.length === 0) {
-            console.log('empty');
             this.setState({
               status: STATUS_EMPTY,
               error: new Error(`${query}`),
@@ -72,7 +71,13 @@ class App extends Component {
             () => isQueryChanged && window.scrollTo(0, 0)
           );
         })
-        // .catch(console.log('this is catch'))
+        .catch(err => {
+          if (err.response.status === 404) {
+            console.log('Resource could not be found!');
+          } else {
+            this.setState({ error: err, status: STATUS_REJECTED });
+          }
+        })
         .finally();
     }
   }
@@ -104,16 +109,22 @@ class App extends Component {
 
         {status === STATUS_PENDING && <Loader />}
 
-        {(status === STATUS_EMPTY || status === STATUS_REJECTED) && (
+        {status === STATUS_EMPTY && (
           <p>
-            There is no <strong>{error.message}</strong> images...
+            There is no <strong>{error.message}</strong> images. Try searching
+            cat images
           </p>
         )}
 
-        <Gallery
-          images={images}
-          showLargeImage={showLargeImage}
-        />
+        {status === STATUS_REJECTED && <p>{error.message}</p>}
+
+        {status === STATUS_RESOLVED && (
+          <Gallery
+            images={images}
+            showLargeImage={showLargeImage}
+          />
+        )}
+
         {isLoadMore && <Button handleNextPage={handleNextPage} />}
 
         {isModalShow && (
