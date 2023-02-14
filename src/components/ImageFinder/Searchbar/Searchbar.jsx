@@ -3,7 +3,7 @@ import { ImSearch } from 'react-icons/im';
 import { toast } from 'react-toastify';
 import PropTypes from 'prop-types';
 
-import css from './styles.module.css';
+import css from './Searchbar.module.css';
 
 class Searchbar extends Component {
   state = { query: '' };
@@ -14,16 +14,11 @@ class Searchbar extends Component {
 
   handleSubmit = event => {
     event.preventDefault();
-    // console.log('Searchbar result', this.state.query);
     if (this.state.query.trim() === '') {
       return toast.warn('🦄 empty search field!');
     }
     this.props.onSubmit(this.state.query);
     this.setState({ query: '' });
-
-    // if (this.state.query.trim() === '') {
-    //   return toast.warn('🦄 empty search field!');
-    // }
   };
 
   render() {

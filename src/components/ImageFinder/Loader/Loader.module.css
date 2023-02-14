@@ -1,0 +1,19 @@
+.LoaderBox {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+
+  margin: 0 auto;
+  width: 200px;
+  padding: 5px;
+}
+
+.LoaderText {
+  display: inline-block;
+  width: 150px;
+
+  margin: 0;
+  padding: 15px;
+  font-size: 24px;
+}

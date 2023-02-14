@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 
-import css from './styles.module.css';
+import css from './Button.module.css';
 
 const Button = ({ handleNextPage }) => {
   return (

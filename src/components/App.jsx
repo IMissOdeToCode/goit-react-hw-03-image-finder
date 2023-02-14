@@ -2,16 +2,16 @@ import { Component } from 'react';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-import Searchbar from './ImageFinder/Searchbar';
-import Gallery from './ImageFinder/ImageGallery';
-import Button from './ImageFinder/Button';
-import Loader from './ImageFinder/Loader';
-import Modal from './ImageFinder/Modal';
-import DetailedImage from './ImageFinder/DetailedImage';
+import Searchbar from './ImageFinder/Searchbar/Searchbar';
+import ImageGallery from './ImageFinder/ImageGallery/ImageGallery';
+import Button from './ImageFinder/Button/Button';
+import Loader from './ImageFinder/Loader/Loader';
+import Modal from './ImageFinder/Modal/Modal';
+import DetailedImage from './ImageFinder/Modal/DetailedImage';
 
-import searchImages from './ImageFinder/pixabay-api';
+import searchImages from './ImageFinder/utils/pixabay-api';
 
-import initialState from './ImageFinder/initialState';
+import initialState from './ImageFinder/utils/initialState';
 
 import {
   STATUS_PENDING,
@@ -19,7 +19,7 @@ import {
   STATUS_RESOLVED,
   STATUS_EMPTY,
   PER_PAGE,
-} from './ImageFinder/constants';
+} from './ImageFinder/utils/constants';
 
 class App extends Component {
   state = initialState;
@@ -108,7 +108,7 @@ class App extends Component {
         {status === STATUS_REJECTED && <p>{error.message}</p>}
 
         {status === STATUS_RESOLVED && (
-          <Gallery
+          <ImageGallery
             images={images}
             showLargeImage={showLargeImage}
           />

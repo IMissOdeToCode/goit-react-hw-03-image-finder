@@ -1,8 +1,9 @@
 import PropTypes from 'prop-types';
 import ImageGalleryItem from './ImageGalleryItem';
-import css from './styles.module.css';
 
-const Gallery = ({ images, showLargeImage }) => {
+import css from './ImageGallery.module.css';
+
+const ImageGallery = ({ images, showLargeImage }) => {
   const items = images.map(image => {
     return (
       <ImageGalleryItem
@@ -19,9 +20,9 @@ const Gallery = ({ images, showLargeImage }) => {
   );
 };
 
-export default Gallery;
+export default ImageGallery;
 
-Gallery.propTypes = {
+ImageGallery.propTypes = {
   image: PropTypes.shape({
     largeImageURL: PropTypes.string,
     webformatURL: PropTypes.string,
