@@ -15,12 +15,15 @@ class Searchbar extends Component {
   handleSubmit = event => {
     event.preventDefault();
     // console.log('Searchbar result', this.state.query);
-    this.props.onSubmit(this.state.query);
-    this.setState({ query: '' });
-
     if (this.state.query.trim() === '') {
       return toast.warn('🦄 empty search field!');
     }
+    this.props.onSubmit(this.state.query);
+    this.setState({ query: '' });
+
+    // if (this.state.query.trim() === '') {
+    //   return toast.warn('🦄 empty search field!');
+    // }
   };
 
   render() {
